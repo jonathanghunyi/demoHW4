@@ -1,4 +1,6 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.function.BooleanSupplier;
 
 public class CurrencyConverter {
 
@@ -13,7 +15,15 @@ public class CurrencyConverter {
     
 	public BigDecimal convert(BigDecimal originalAmount, BigDecimal conversionRate) {
 		BigDecimal convertedAmount = originalAmount.multiply(conversionRate);
-		return convertedAmount.setScale(DECIMAL_DIGITS);
+		return convertedAmount.setScale(DECIMAL_DIGITS, RoundingMode.HALF_UP);
+	}
+
+
+	public boolean isValidRate(BigDecimal conversionRate) {
+	    BigDecimal lowerBound = BigDecimal.valueOf(0.05); // Lower bound
+	    BigDecimal upperBound = BigDecimal.valueOf(0.06); // Upper bound
+	    // Check conversion rate within the range
+	    return conversionRate.compareTo(lowerBound) >= 0 && conversionRate.compareTo(upperBound) <= 0;
 	}
 
 }
